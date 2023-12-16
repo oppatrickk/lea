@@ -1,8 +1,8 @@
+import os
 import requests
-import json
 from bs4 import BeautifulSoup
 
-def scrape_philippine_constitution(url, output_file="philippine_constitution.json"):
+def scrape_philippine_constitution(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
         
@@ -14,47 +14,54 @@ def scrape_philippine_constitution(url, output_file="philippine_constitution.jso
             # Parse the HTML content
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Find the elements containing the articles and sections
-            articles_and_sections = soup.find_all(['h2', 'p'])
+            # Extract the title of the website
+            website_title = soup.title.string.strip()
 
-            # Initialize variables to store current article and section
-            current_article = None
-            current_section = None
+            # Define the data folder and create it if it doesn't exist
+            data_folder = "data"
+            if not os.path.exists(data_folder):
+                os.makedirs(data_folder)
 
-            # Initialize a dictionary to store the constitution data
-            constitution_data = {"title": "1987 Constitution of the Republic of the Philippines", "articles": []}
+            # Define the republic_acts subfolder and create it if it doesn't exist
+            republic_acts_folder = os.path.join(data_folder, "republic_acts")
+            if not os.path.exists(republic_acts_folder):
+                os.makedirs(republic_acts_folder)
 
-            # Iterate through each element
-            for element in articles_and_sections:
-                text = element.get_text().strip()
+            # Define subfolders for txt and html within republic_acts
+            txt_folder = os.path.join(republic_acts_folder, "txt")
+            html_folder = os.path.join(republic_acts_folder, "html")
 
-                # Check for the presence of "ARTICLE" in the text
-                if "ARTICLE" in text:
-                    # Extract the article number and title
-                    article_number, _, article_title = text.partition(" ")
-                    article_number = article_number.replace("ARTICLE", "").strip()
+            # Create subfolders if they don't exist
+            if not os.path.exists(txt_folder):
+                os.makedirs(txt_folder)
+            if not os.path.exists(html_folder):
+                os.makedirs(html_folder)
 
-                    # Start a new article
-                    current_article = {"article_no": article_number, "article_title": article_title, "sections": []}
-                    constitution_data["articles"].append(current_article)
-                    current_section = None
-                elif current_article and "SECTION" in text:
-                    # Start a new section within the current article
-                    current_section = {"section_no": text, "content": ""}
-                    current_article["sections"].append(current_section)
-                elif current_section is not None:
-                    # Add content to the current section
-                    current_section["content"] += text + "\n"
+            # Save the raw HTML to a file within the html subfolder
+            html_output_file = os.path.join(html_folder, f"{website_title}_raw.html")
+            with open(html_output_file, 'w', encoding='utf-8') as html_file:
+                html_file.write(str(soup))
 
-            # Convert the constitution_data dictionary to JSON format
-            constitution_json = json.dumps(constitution_data, indent=2, ensure_ascii=False)
+            print(f"Raw HTML data saved to {html_output_file}")
 
-            # Save the JSON data to a file
-            with open(output_file, 'w', encoding='utf-8') as file:
-                file.write(constitution_json)
+            # Initialize a list to store the constitution text
+            constitution_text = []
 
-            print(f"JSON data saved to {output_file}")
-            return constitution_json
+            # Find all paragraphs within the body
+            paragraphs = soup.find('body').find_all('p')
+
+            # Iterate through each paragraph
+            for paragraph in paragraphs:
+                text = paragraph.get_text().strip()
+                constitution_text.append(text)
+
+            # Use the website title as the filename for the text file within the txt subfolder
+            text_output_file = os.path.join(txt_folder, f"{website_title}.txt")
+            with open(text_output_file, 'w', encoding='utf-8') as text_file:
+                text_file.write('\n'.join(constitution_text))
+
+            print(f"Text data saved to {text_output_file}")
+            return '\n'.join(constitution_text)
         else:
             print(f"Failed to retrieve content. Status code: {response.status_code}")
             return None
@@ -64,7 +71,7 @@ def scrape_philippine_constitution(url, output_file="philippine_constitution.jso
         return None
 
 # URL of the Philippine Constitution page
-constitution_url = "https://www.officialgazette.gov.ph/constitutions/1987-constitution/"
+constitution_url = "https://lawphil.net/consti/cons1987.html"
 
-# Scrape text, remove HTML tags, and save as JSON file
-scrape_philippine_constitution(constitution_url, output_file="philippine_constitution.json")
+# Scrape text and save as text file with the website title as the filename
+scrape_philippine_constitution(constitution_url)
