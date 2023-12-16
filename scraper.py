@@ -30,11 +30,12 @@ def scrape_philippine_constitution(url, output_file="philippine_constitution.jso
 
                 # Check for the presence of "ARTICLE" in the text
                 if "ARTICLE" in text:
-                    # Extract the article title
-                    article_title = text.replace("ARTICLE", "").strip()
+                    # Extract the article number and title
+                    article_number, _, article_title = text.partition(" ")
+                    article_number = article_number.replace("ARTICLE", "").strip()
 
                     # Start a new article
-                    current_article = {"article_no": text, "article_title": article_title, "sections": []}
+                    current_article = {"article_no": article_number, "article_title": article_title, "sections": []}
                     constitution_data["articles"].append(current_article)
                     current_section = None
                 elif current_article and "SECTION" in text:
