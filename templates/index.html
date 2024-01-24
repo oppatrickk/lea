@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constitution Scraper</title>
+    <title>Legal Document Scraper - LEA</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
 </head>
+
 <body>
 
-    <h2>Constitution Scraper</h2>
+    <h2>Legal Document Scraper</h2>
 
     <form method="post" action="/">
         <label for="url">Enter URL:</label>
@@ -16,8 +20,9 @@
     </form>
 
     {% if result %}
-        <p>{{ result }}</p>
+    <p>{{ result }}</p>
     {% endif %}
 
 </body>
+
 </html>
