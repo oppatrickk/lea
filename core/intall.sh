@@ -1,6 +1,9 @@
-!pip install -qU \
-    langchain==0.0.354 \
-    openai==1.6.1 \
-    datasets==2.10.1 \
-    pinecone-client==3.0.0 \
-    tiktoken==0.5.2
+
+# * Install 
+# https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+pip install langchain 
+pip install openai 
+pip install datasets 
+pip install pinecone-client 
+pip install tiktoken
