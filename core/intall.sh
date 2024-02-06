@@ -5,5 +5,6 @@
 pip install langchain 
 pip install openai 
 pip install datasets 
-pip install pinecone-client 
 pip install tiktoken
+pip install chromadb 
+pip install --upgrade --quiet  "unstructured[all-docs]
