@@ -1,6 +1,7 @@
 # Import necessary modules
 import os
 import time
+from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 from datasets import load_dataset
 from pinecone import Pinecone
@@ -13,9 +14,11 @@ from langchain_community.vectorstores import Pinecone
 # *
 
 
+load_dotenv() 
+
 # Initialize ChatOpenAI instance
 chat = ChatOpenAI(
-    openai_api_key=os.environ.get("OPENAI_API_KEY"),
+    openai_api_key=os.environ["OPENAI_API_KEY"],
     model='gpt-3.5-turbo'
 )
 
