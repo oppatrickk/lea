@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAI
 from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
@@ -59,9 +59,15 @@ vectordb = Chroma(
 retriever = vectordb.as_retriever()
 retriever = vectordb.as_retriever(search_kwargs={"k": 2})
 
+# Set up the turbo LLM
+turbo_llm = ChatOpenAI(
+    temperature=0,
+    model_name='gpt-3.5-turbo'
+)
+
 # create the chain to answer questions 
 qa_chain = RetrievalQA.from_chain_type(
-    llm=OpenAI(), 
+    llm=turbo_llm, 
     chain_type="stuff", 
     retriever=retriever, 
     return_source_documents=True
@@ -74,6 +80,6 @@ def process_llm_response(llm_response):
     for source in llm_response["source_documents"]:
         print(source.metadata['source'])
 
-query = "What is the 1987 Philippine Constitution?"
+query = "What is RA 9262?"
 llm_response = qa_chain.invoke(query)
 process_llm_response(llm_response)

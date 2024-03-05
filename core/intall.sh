@@ -8,3 +8,4 @@ pip install openai
 pip install datasets 
 pip install tiktoken
 pip install chromadb 
+pip install unstructured
