@@ -3,7 +3,7 @@
 # https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 pip install langchain 
-pip install langchain-openai
+pip install langchain_openai
 pip install langchain_community
 pip install openai 
 pip install datasets 
