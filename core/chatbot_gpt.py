@@ -46,7 +46,7 @@ embedding_model = 1;
 
 if embedding_model == 1:
     embedding = OpenAIEmbeddings()
-    persist_directory = 'db_openai'
+    persist_directory = 'data/database/openai'
     
 elif embedding_model == 2:
     embedding = HuggingFaceEmbeddings(
@@ -55,7 +55,7 @@ elif embedding_model == 2:
     encode_kwargs = {"normalize_embeddings": False,}
     )
     
-    persist_directory = 'db_hf1'
+    persist_directory = 'data/database/huggingface/multi-qa-MiniLM-L6-dot-v1'
 
 elif embedding_model == 3:
     embedding = HuggingFaceEmbeddings(
@@ -64,7 +64,7 @@ elif embedding_model == 3:
     encode_kwargs = {"normalize_embeddings": False,}
     )
     
-    persist_directory = 'db_hf2'
+    persist_directory = 'data/database/huggingface/paraphrase-multilingual-MiniLM-L12-v2'
 
 # Embeddings Comparison
 # https://www.sbert.net/docs/pretrained_models.html
