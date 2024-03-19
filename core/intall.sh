@@ -2,6 +2,7 @@
 # * Install 
 # https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
+pip install pydantic
 pip install langchain 
 pip install langchain_openai
 pip install langchain_community

@@ -1,3 +1,6 @@
 .env
 *.sqlite3
 *.gguf
+
+db/
+test_db/

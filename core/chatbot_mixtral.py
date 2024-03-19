@@ -24,6 +24,6 @@ llm = LlamaCpp(
 )
 
 prompt = """
-Question: A rap battle between Stephen Colbert and John Oliver
+Question: A rap battle between Lorence and Luke
 """
 llm.invoke(prompt)
