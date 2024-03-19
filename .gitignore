@@ -2,5 +2,6 @@
 *.sqlite3
 *.gguf
 
-db/
-test_db/
+db_openai/
+db_hf1/
+db_hf2/
