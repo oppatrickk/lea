@@ -17,15 +17,32 @@ os.environ["OPENAI_API_KEY"]
 # LOADER
 # ===========
 
+file_type = "txt"
+
 # Load and process the text files
-path = './data/republic_acts/txt'
-loader = DirectoryLoader(path, glob="**/*.txt", loader_cls=TextLoader)
+if file_type == "txt":
+    path = './data/republic_acts/txt'
+    glob = "**/*.txt"
+
+elif file_type == "json":
+    path = './data/republic_acts/json'
+    glob = "**/*.json"
+
+loader = DirectoryLoader(
+    path, 
+    glob = glob,
+    loader_cls = TextLoader
+    )
 
 documents = loader.load()
 print(len(documents), "Files loaded: ", os.listdir(path))
 
 # Splitting the text into
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000, 
+    chunk_overlap=0,
+    )
+
 texts = text_splitter.split_documents(documents)
 
 # TODO: Use \n separator
@@ -33,7 +50,7 @@ texts = text_splitter.split_documents(documents)
 print(len(texts), "texts")
 
 # =========
-# ChromaDB
+# Loader
 # =========
 
 # Embed and store the texts
@@ -49,25 +66,26 @@ if embedding_model == 1:
     persist_directory = 'data/database/openai'
     
 elif embedding_model == 2:
-    embedding = HuggingFaceEmbeddings(
-    model_name ="sentence-transformers/multi-qa-MiniLM-L6-dot-v1",
-    model_kwargs = {"device": "cpu", "trust_remote_code": True},
-    encode_kwargs = {"normalize_embeddings": False,}
-    )
-    
+    huggingface_model="sentence-transformers/multi-qa-MiniLM-L6-dot-v1"
     persist_directory = 'data/database/huggingface/multi-qa-MiniLM-L6-dot-v1'
 
 elif embedding_model == 3:
+    huggingface_model="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    persist_directory = 'data/database/huggingface/paraphrase-multilingual-MiniLM-L12-v2'
+
+if embedding_model == 2 or embedding_model == 3: 
     embedding = HuggingFaceEmbeddings(
-    model_name ="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    model_name =huggingface_model,
     model_kwargs = {"device": "cpu", "trust_remote_code": True},
     encode_kwargs = {"normalize_embeddings": False,}
     )
-    
-    persist_directory = 'data/database/huggingface/paraphrase-multilingual-MiniLM-L12-v2'
 
 # Embeddings Comparison
 # https://www.sbert.net/docs/pretrained_models.html
+
+# =========
+# ChromaDB
+# =========
 
 vectordb = Chroma.from_documents(
     documents=texts, 
