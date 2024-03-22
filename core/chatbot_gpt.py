@@ -16,7 +16,7 @@ os.environ["OPENAI_API_KEY"]
 # LOADER
 # ===========
 
-file_type = "txt"
+file_type = "json"
 
 # Load and process the files
 if file_type == "txt":
